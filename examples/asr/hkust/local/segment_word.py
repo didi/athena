@@ -16,6 +16,7 @@
 # ==============================================================================
 """ segment word """
 
+import codecs
 import sys
 import re
 from absl import logging
@@ -32,23 +33,21 @@ def segment_trans(vocab_file, text_file):
       seg_trans: segment words
     '''
     jieba.set_dictionary(vocab_file)
-    with open(text_file) as TEXT:
-      lines = TEXT.readlines()
-      sents = ''
-      for line in lines:
-          sents += line
-      words = jieba.cut(sents, HMM=False)
-      seg_words = ' '.join(words)
-      seg_words = re.sub(r'\n ', r'\n', seg_words)
-      return seg_words
+    with open(text_file, "r", encoding="utf-8") as text:
+        lines = text.readlines()
+        sents = ''
+        for line in lines:
+            sents += line
+        words = jieba.cut(sents, HMM=False)
+        seg_words = ' '.join(words)
+        seg_words = re.sub(r'\n ', r'\n', seg_words)
+        return seg_words
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-      logging.warning('Usage: python {} vocab_file text_file'.format(sys.argv[0]))
-      exit(1)
     logging.set_verbosity(logging.INFO)
-    vocab_file = sys.argv[1]
-    text_file = sys.argv[2]
-    seg_trans = segment_trans(vocab_file, text_file)
-    print(seg_trans)
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+    if len(sys.argv) < 3:
+        logging.warning('Usage: python {} vocab_file text_file'.format(sys.argv[0]))
+        sys.exit()
+    print(segment_trans(sys.argv[1], sys.argv[2]))
