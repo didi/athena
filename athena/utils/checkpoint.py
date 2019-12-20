@@ -21,7 +21,6 @@ import tensorflow as tf
 from absl import logging
 import numpy as np
 
-
 class Checkpoint(tf.train.Checkpoint):
     """ A wrapper for Tensorflow checkpoint
 
@@ -57,6 +56,7 @@ class Checkpoint(tf.train.Checkpoint):
         if loss is None:
             return
         if loss < self.best_loss:
+            self.best_loss = loss
             with open(os.path.join(self.checkpoint_directory, 'best_loss'), 'w') as wf:
                 checkpoint = save_path.split('/')[-1]
                 wf.write('model_checkpoint_path: "%s"' % checkpoint)
