@@ -27,6 +27,9 @@ stop_stage=100
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     # prepare data
+    echo "Preparing data"
+    # tar -xvf /nfs/project/datasets/opensource_data/hkust/LDC2005S15.tar
+    # tar -xvf /nfs/project/datasets/opensource_data/hkust/LDC2005T32.tar
     python examples/asr/hkust/local/prepare_data.py /nfs/project/datasets/opensource_data/hkust
     mkdir -p examples/asr/hkust/data
     cp /nfs/project/datasets/opensource_data/hkust/{train,dev}.csv examples/asr/hkust/data/
