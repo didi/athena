@@ -152,13 +152,16 @@ def train(jsonfile, Solver, rank_size=1, rank=0):
             logging.info(">>>>> start evaluate in epoch %d" % epoch)
         dataset = dataset_builder.load_csv(p.dev_csv).as_dataset(p.batch_size, p.num_data_threads)
         loss = solver.evaluate(dataset, epoch)
-        epoch = epoch + 1
         if rank == 0:
             checkpointer(loss)
+        epoch = epoch + 1
 
 
 if __name__ == "__main__":
     logging.set_verbosity(logging.INFO)
+    if len(sys.argv) < 2:
+        logging.warning('Usage: python {} config_json_file'.format(sys.argv[0]))
+        sys.exit()
     tf.random.set_seed(1)
 
     JSON_FILE = sys.argv[1]
