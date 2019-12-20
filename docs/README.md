@@ -1,3 +1,4 @@
+
 # Athena
 
 *Athena* is an open-source implementation of end-to-end Automatic Speech Recognition (ASR) engine. Currently this project supports training and decoding of Connectionist Temporal Classification (CTC) based model, transformer-basesd encoder-decoder model and Hybrid CTC/attention based model, and MPC based unsupervised pretraning.
@@ -19,6 +20,7 @@ All of our models are implemented in Tensorflow>=2.0.0.
     - [Setting the Configuration File](#setting-the-configuration-file)
     - [Train a Model](#train-a-model)
   - [Results](#results)
+  - [Directory Structure](#directory-structure)
 
 ## Key Features
 
@@ -117,10 +119,10 @@ With all the above preparation done, training becomes straight-forward. `athena/
 
 Please install Horovod and MPI at first, if you want to train model using multi-gpu. See the [Horovod page](https://github.com/horovod/horovod) for more instructions.
 
-To run on a machine with 4 GPUs with Athona:  
+To run on a machine with 4 GPUs with Athona:
 `$ horovodrun -np 4 -H localhost:4 python athena/horovod_main.py <your_config_in_json_file>`
 
-To run on 4 machines with 4 GPUs each with Athena:  
+To run on 4 machines with 4 GPUs each with Athena:
 `$ horovodrun -np 16 -H server1:4,server2:4,server3:4,server4:4 python athena/horovod_main.py <your_config_in_json_file>`
 
 ## Results
@@ -129,3 +131,28 @@ Language  | Model Name | Training Data | Hours of Speech | WER/%
 :-----------: | :------------: | :----------: |  -------: | -------:
 English  | Transformer | [LibriSpeech Dataset](http://www.openslr.org/12/) | 960 h |
 Mandarin | Transformer | HKUST Dataset | 151 h |
+
+## Directory Structure
+
+Below is the basic directory structure for Athena
+
+```bash
+|-- Athena
+|   |-- data  # - root directory for input-related operations
+|   |   |-- datasets  # custom datasets for ASR and pretraining
+|   |-- layers  # some layers
+|   |-- models  # some models
+|   |-- tools # contains various tools, e.g. decoding tools
+|   |-- transform # custom featureizer based on C++
+|   |   |-- feats
+|   |   |   |-- ops # c++ code on tensorflow ops
+|   |-- utils # utils, e.g. checkpoit, learning_rate, metric, etc
+|-- docs  # docs
+|-- examples  # example scripts for ASR, TTS, etc
+|   |-- asr  # each subdirectory contains a data preparation scripts and a run script for the task
+|       |-- aishell
+|       |-- hkust
+|       |-- librispeech
+|       |-- switchboard_fisher
+|-- tools  # need to source env.sh before training
+```
