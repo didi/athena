@@ -9,3 +9,4 @@ tqdm
 sentencepiece
 librosa
 kenlm
+jieba
