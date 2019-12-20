@@ -38,7 +38,9 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     # prepare language model
     tail -n +2 examples/asr/hkust/data/train.csv | cut -f 3 > examples/asr/hkust/data/text
-    # tools/kenlm/build/bin/lmplz -o 4 < examples/asr/hkust/data/text > examples/asr/hkust/data/4gram.arpa
+    # python examples/asr/hkust/local/segment_word.py examples/asr/hkust/data/vocab \
+    #   examples/asr/hkust/data/text > examples/asr/hkust/data/text.seg
+    # tools/kenlm/build/bin/lmplz -o 4 < examples/asr/hkust/data/text.seg > examples/asr/hkust/data/4gram.arpa
     # TODO: prepare the code for training n-gram model
     tail -n +2 examples/asr/hkust/data/train.csv | awk '{print $3"\t"$3}' > examples/asr/hkust/data/train.trans.csv
     tail -n +2 examples/asr/hkust/data/dev.csv | awk '{print $3"\t"$3}' > examples/asr/hkust/data/dev.trans.csv
