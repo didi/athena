@@ -3,3 +3,6 @@ __pycache__
 *.pyc
 tags
 .vscode
+
+/tools/sph2pipe_v2.5.tar.gz
+/tools/sph2pipe_v2.5
