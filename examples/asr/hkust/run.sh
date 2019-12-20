@@ -27,6 +27,7 @@ stop_stage=100
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     # prepare data
+    echo "Preparing data"
     python examples/asr/hkust/local/prepare_data.py /nfs/project/datasets/opensource_data/hkust
     mkdir -p examples/asr/hkust/data
     cp /nfs/project/datasets/opensource_data/hkust/{train,dev}.csv examples/asr/hkust/data/
@@ -48,21 +49,25 @@ fi
 
 if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     # pretrain stage
+    echo "Pretraining"
     python athena/main.py examples/asr/hkust/mpc.json
 fi
 
 if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     # finetuning stage
+    echo "Fine-tuning"
     python athena/main.py examples/asr/hkust/mtl_transformer.json
 fi
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     # decoding stage
+    echo "Decoding"
     python athena/decode_main.py examples/asr/hkust/mtl_transformer.json
 fi
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     # decoding stage
+    echo "Decoding"
     python athena/main.py examples/asr/hkust/rnnlm.json
 fi
 
