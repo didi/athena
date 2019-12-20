@@ -29,7 +29,7 @@ from absl import logging
 import tensorflow as tf
 from sox import Transformer
 from athena import get_wave_file_length
-#from athena import TextFeaturizer
+from athena import TextFeaturizer
 
 SUBSETS = ["train", "dev"]
 
@@ -60,8 +60,8 @@ def convert_audio_and_split_transcript(directory, subset, out_csv_file):
     out_csv_file: the resulting output csv file
   """
     gfile = tf.compat.v1.gfile
-    sph2pip = os.path.join(os.path.dirname(__file__), "../../../athena/tools/sph2pipe")
-    #text_featurizer = TextFeaturizer()
+    sph2pip = os.path.join(os.path.dirname(__file__), "../../../../athena/tools/sph2pipe")
+    text_featurizer = TextFeaturizer()
 
     logging.info("Processing audio and transcript for %s" % subset)
     audio_dir = os.path.join(directory, "LDC2005S15/")
@@ -86,8 +86,7 @@ def convert_audio_and_split_transcript(directory, subset, out_csv_file):
     # Generate the JSON file and char dict file.
     with TemporaryDirectory(dir="/tmp-data/tmp/") as output_tmp_wav_dir:
         for root, _, filenames in gfile.Walk(trans_dir):
-            if not re.match('.*/' + subset + '/.*', root):
-                print(root)
+            if not re.match('.*/' + subset + '.*', root):
                 continue
             for filename in fnmatch.filter(filenames, "*.txt"):
                 trans_file = os.path.join(root, filename)
@@ -153,7 +152,7 @@ def convert_audio_and_split_transcript(directory, subset, out_csv_file):
                         wav_length = get_wave_file_length(sub_wav_file)
 
                         transcript = normalize_hkust_trans(transcript)
-                        #transcript = text_featurizer.delete_punct(transcript)
+                        transcript = text_featurizer.delete_punct(transcript)
 
                         if len(transcript) > 0:
                             for char in transcript:
@@ -195,6 +194,10 @@ def processor(dircetory, subset, force_process):
 
 if __name__ == "__main__":
     logging.set_verbosity(logging.INFO)
+    if len(sys.argv) < 2:
+        print('Usage: python {} data_dir (data_dir should contain audio and text '
+              'directory: LDC2005S15 and LDC2005T32)'.format(sys.argv[0]))
+        exit(1)
     DIR = sys.argv[1]
     for SUBSET in SUBSETS:
         processor(DIR, SUBSET, True)
