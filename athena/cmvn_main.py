@@ -25,12 +25,17 @@ from athena.main import parse_config, SUPPORTED_DATASET_BUILDER
 
 if __name__ == "__main__":
     logging.set_verbosity(logging.INFO)
+    if len(sys.argv) < 3:
+        logging.warning('Usage: python {} config_json_file data_csv_file'.format(sys.argv[0]))
+        sys.exit()
     tf.random.set_seed(1)
 
     jsonfile = sys.argv[1]
     with open(jsonfile) as file:
         config = json.load(file)
     p = parse_config(config)
+    if "speed_permutation" in p.dataset_config:
+        p.dataset_config['speed_permutation'] = [1.0]
     csv_file = sys.argv[2]
     dataset_builder = SUPPORTED_DATASET_BUILDER[p.dataset_builder](p.dataset_config)
     dataset_builder.load_csv(csv_file).compute_cmvn_if_necessary(True)

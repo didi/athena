@@ -85,7 +85,7 @@ class SpeechDatasetBuilder(BaseDatasetBuilder):
         for line in lines:
             items = line.split("\t")
             wav_filename, length, speaker = items[0], items[1], 'global'
-            if 'speakers' in headers.split("\t"):
+            if 'speaker' in headers.split("\t"):
                 speaker = items[-1]
             self.entries.append(tuple([wav_filename, length, speaker]))
         self.entries.sort(key=lambda item: float(item[1]))
