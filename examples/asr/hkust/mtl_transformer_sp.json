@@ -65,7 +65,7 @@
     "speed_permutation": [0.9, 1.0, 1.1]
   },
   "num_data_threads": 1,
-  "train_csv":"/tmp-data/dataset/opensource/hkust/train.spk.csv",
-  "dev_csv":"/tmp-data/dataset/opensource/hkust/dev.spk.csv",
-  "test_csv":"/tmp-data/dataset/opensource/hkust/dev.spk.csv"
+  "train_csv":"examples/asr/hkust/data/train.csv",
+  "dev_csv":"examples/asr/hkust/data/dev.csv",
+  "test_csv":"examples/asr/hkust/data/dev.csv"
 }
