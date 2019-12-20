@@ -33,12 +33,18 @@ All of our models are implemented in Tensorflow>=2.0.0.
 This project has only been tested on Python 3. We recommend creating a virtual environment and installing the python requirements there.
 
 ```bash
-git clone https://github.com/didichuxing/athena.git
+git clone https://github.com/didi/athena.git
+cd athena
 pip install -r requirements.txt
 python setup.py bdist_wheel sdist
 python -m pip install --ignore-installed dist/athena-0.1.0*.whl
 source ./tools/env.sh
 ```
+
+Notes:
+
+- If you see errors such as `ERROR: Cannot uninstall 'wrapt'` while installing TensorFlow, try updating it using command `conda update wrapt`. Same for similar dependencies such as `entrypoints`, `llvmlite` and so on.
+- You may want to make sure you have `g++` version 7 or above to make sure you can successfully install TensorFlow.
 
 ## Data Preparation
 
@@ -119,7 +125,7 @@ With all the above preparation done, training becomes straight-forward. `athena/
 
 Please install Horovod and MPI at first, if you want to train model using multi-gpu. See the [Horovod page](https://github.com/horovod/horovod) for more instructions.
 
-To run on a machine with 4 GPUs with Athena:
+To run on a machine with 4 GPUs with Athona:
 `$ horovodrun -np 4 -H localhost:4 python athena/horovod_main.py <your_config_in_json_file>`
 
 To run on 4 machines with 4 GPUs each with Athena:

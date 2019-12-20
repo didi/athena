@@ -31,7 +31,6 @@ if __name__ == "__main__":
     with open(jsonfile) as file:
         config = json.load(file)
     p = parse_config(config)
-    p.dataset_config['speed_permutation'] = [1.0] # cause no redundent computation
     csv_file = sys.argv[2]
     dataset_builder = SUPPORTED_DATASET_BUILDER[p.dataset_builder](p.dataset_config)
     dataset_builder.load_csv(csv_file).compute_cmvn_if_necessary(True)

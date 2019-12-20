@@ -83,7 +83,7 @@ def convert_audio_and_split_transcript(directory, subset, out_csv_file):
     # Write to CSV file which contains three columns:
     # "wav_filename", "wav_length_ms", "transcript", "speakers".
     df = pandas.DataFrame(
-        data=files, columns=["wav_filename", "wav_length_ms", "transcript", "speakers"]
+        data=files, columns=["wav_filename", "wav_length_ms", "transcript", "speaker"]
     )
     df.to_csv(out_csv_file, index=False, sep="\t")
     logging.info("Successfully generated csv file {}".format(out_csv_file))
