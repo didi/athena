@@ -151,3 +151,17 @@ def set_default_summary_writer(summary_directory=None):
         summary_directory = os.path.join(summary_directory, "event")
     writer = tf.summary.create_file_writer(summary_directory)
     writer.set_as_default()
+
+def tensor_shape(tensor):
+    """  Return a list with tensor shape. For each dimension,
+         use tensor.get_shape() first. If not available, use tf.shape().
+    """
+    if tensor.get_shape().dims is None:
+        return tf.shape(tensor)
+    shape_value = tensor.get_shape().as_list()
+    shape_tensor = tf.shape(tensor)
+    ret = [shape_tensor[idx]
+        if shape_value[idx] is None
+        else shape_value[idx]
+        for idx in range(len(shape_value))]
+    return ret
