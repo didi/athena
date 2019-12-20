@@ -20,10 +20,9 @@ import os
 import tensorflow as tf
 from absl import logging
 import numpy as np
-import shutil
 
 
-class Checkpoint(tf.train.CheckpointManager):
+class Checkpoint(tf.train.Checkpoint):
     """ A wrapper for Tensorflow checkpoint
 
     Args:
@@ -36,56 +35,42 @@ class Checkpoint(tf.train.CheckpointManager):
         transformer = SpeechTransformer(target_vocab_size=dataset_builder.target_dim)
         optimizer = tf.keras.optimizers.Adam()
         ckpt = Checkpoint(checkpoint_directory='./train', summary_directory='./event',
-            model=transformer, optimizer=optimizer)
+            transformer=transformer, optimizer=optimizer)
         solver = BaseSolver(transformer)
         for epoch in dataset:
-            loss = solver.train(..)
-            ckpt(loss)
+            ckpt()
     """
+
     def __init__(self, checkpoint_directory=None, **kwargs):
-        self.ckpt = tf.train.Checkpoint(**kwargs)
+        super().__init__(**kwargs)
+        self.best_loss = np.inf
         if checkpoint_directory is None:
             checkpoint_directory = os.path.join(os.path.expanduser("~"), ".athena")
-        super().__init__(self.ckpt, directory=checkpoint_directory, max_to_keep=5)
-        self.best_loss = np.inf
+        self.checkpoint_prefix = os.path.join(checkpoint_directory, "ckpt")
         self.checkpoint_directory = checkpoint_directory
-        self.save_counter = self.ckpt.save_counter
         logging.info("trying to restore from : %s" % checkpoint_directory)
-        # load from latest checkpoint if previous models exist in checkpoint dir
-        self.ckpt.restore(tf.train.latest_checkpoint(checkpoint_directory))
-        self.best_checkpoint_directory = os.path.join(self.checkpoint_directory, 'best_loss')
+        # load from checkpoint if previous models exist in checkpoint dir
+        self.restore(tf.train.latest_checkpoint(checkpoint_directory))
 
     def _compare_and_save_best(self, loss, save_path):
         """ compare and save the best model in best_loss """
         if loss is None:
             return
         if loss < self.best_loss:
-            self.best_loss = loss
-            # save ckpt of best loss
-            best_dir = tf.train.latest_checkpoint(self.checkpoint_directory)
-            best_name = os.path.basename(best_dir)
-            self.copy_best_ckpt(best_name)
+            with open(os.path.join(self.checkpoint_directory, 'best_loss'), 'w') as wf:
+                checkpoint = save_path.split('/')[-1]
+                wf.write('model_checkpoint_path: "%s"' % checkpoint)
 
     def __call__(self, loss=None):
-        logging.info("saving model in :%s" % self.checkpoint_directory)
-        save_path = self.save()
+        logging.info("saving model in :%s" % self.checkpoint_prefix)
+        save_path = self.save(file_prefix=self.checkpoint_prefix)
         self._compare_and_save_best(loss, save_path)
 
     def restore_from_best(self):
         """ restore from the best model """
-        self.ckpt.restore(
+        self.restore(
             tf.train.latest_checkpoint(
                 self.checkpoint_directory,
                 latest_filename='best_loss'
             )
         )
-
-    def copy_best_ckpt(self, best_name):
-        if not os.path.exists(self.best_checkpoint_directory):
-            os.makedirs(self.best_checkpoint_directory)
-        files = ['.data-00000-of-00002', '.data-00001-of-00002', '.index']
-        for i in files:
-            src = self.checkpoint_directory + best_name + i
-            dst = self.best_checkpoint_directory + '/ckpt-1' + i
-            shutil.copyfile(src, dst)
-
