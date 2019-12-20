@@ -192,6 +192,9 @@ def processor(dircetory, subset, force_process):
 
 if __name__ == "__main__":
     logging.set_verbosity(logging.INFO)
+    if len(sys.argv) < 2:
+        logging.warning('Usage: python {} HKUST_DIR'.format(sys.argv[0]))
+        sys.exit()
     DIR = sys.argv[1]
     for SUBSET in SUBSETS:
         processor(DIR, SUBSET, True)
