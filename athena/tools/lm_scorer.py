@@ -63,7 +63,7 @@ class NGramScorer(object):
         chars = [str(x) for x in range(self.num_syms)]
         chars[self.sos] = "<s>"
         chars[self.eos] = "</s>"
-        chars[0] = "<SPACE>"
+        chars[0] = "<space>"
 
         for i in range(num_cands):
             parent = cand_parents[i]
