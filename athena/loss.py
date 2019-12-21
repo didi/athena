@@ -18,6 +18,7 @@
 """ some losses """
 import tensorflow as tf
 from .utils.misc import insert_eos_in_labels
+from .hmm_ctc.hmmctc_loss_op import hmmctc_loss
 
 
 class CTCLoss(tf.keras.losses.Loss):
@@ -34,7 +35,8 @@ class CTCLoss(tf.keras.losses.Loss):
     def __call__(self, logits, samples, logit_length=None):
         assert logit_length is not None
         # use v2 ctc_loss
-        ctc_loss = tf.nn.ctc_loss(
+
+        ctc_loss_ori = tf.nn.ctc_loss(
             labels=samples["output"],
             logits=logits,
             logit_length=logit_length,
@@ -42,6 +44,15 @@ class CTCLoss(tf.keras.losses.Loss):
             logits_time_major=self.logits_time_major,
             blank_index=self.blank_index,
         )
+
+        labels = tf.sparse.from_dense(samples["output"])
+        with tf.device('/cpu:0'):
+            ctc_loss = hmmctc_loss(
+                labels=labels,
+                inputs=logits,
+                sequence_length=logit_length,
+                time_major =self.logits_time_major,
+            )
         return tf.reduce_mean(ctc_loss)
 
 

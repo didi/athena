@@ -131,8 +131,7 @@ class SpeechRecognitionDatasetBuilder(BaseDatasetBuilder):
         feat = self.audio_featurizer(audio_data, speed=speed)
         feat = self.feature_normalizer(feat, speaker)
         feat_length = feat.shape[0]
-
-        label = self.text_featurizer.encode(transcripts)
+        label = self.text_featurizer.hmmctc_encode(transcripts)
         label_length = len(label)
         return {
             "input": feat,

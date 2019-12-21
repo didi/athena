@@ -54,6 +54,8 @@ class Vocabulary:
         self.itos = defaultdict(self._default_unk_symbol)
         self.space, self.unk = "<space>", "<unk>"
         self.unk_index, self.max_index = 0, 0
+        self.vocab_file = vocab_file
+        self.dec = {}
 
         with open(vocab_file, "r", encoding="utf-8") as vocab:
             for line in vocab:
@@ -67,6 +69,12 @@ class Vocabulary:
                     self.unk_index = index
                 if index > self.max_index:
                     self.max_index = index
+                if word not in self.dec:
+                    self.dec[word] = []
+                    self.dec[word].append(index)
+                else:
+                    self.dec[word].append(index)
+                self.dec[word].sort()
 
         # special deal with the space maybe used in English datasets
         if self.stoi[self.space] != self.unk_index:
@@ -188,6 +196,37 @@ class TextFeaturizer:
     def encode(self, texts):
         """Convert a sentence to a list of ids, with special tokens added."""
         return self.model.encode(texts)
+
+    def hmmctc_encode(self, sentence):
+        """Convert a sentence to a list of ids for hmmctc, with special tokens added."""
+        char_idx_list = []
+        tmp_char = None
+        tmp_num = 0
+
+        for char in sentence:
+            if char == ' ':
+                continue
+            if char != tmp_char and tmp_num == 0:
+                char_idx = self.model.dec[char][tmp_num]
+                tmp_num += 1
+                char_idx_list.append(char_idx)
+                tmp_char = char
+            elif char != tmp_char and tmp_num != 0:
+                tmp_num = 0
+                char_idx = self.model.dec[char][tmp_num]
+                tmp_num += 1
+                tmp_char = char
+                char_idx_list.append(char_idx)
+            elif char == tmp_char:
+                char_idx = self.model.dec[char][tmp_num]
+                tmp_num += 1
+                tmp_char = char
+                char_idx_list.append(char_idx)
+
+            else:
+                print("char: %s out of index" % char)
+                continue
+            return char_idx_list
 
     def decode(self, sequences):
         """Conver a list of ids to a sentence"""

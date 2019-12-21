@@ -3,7 +3,7 @@
   "num_epochs":20,
   "sorta_epoch":1,
   "ckpt":"examples/asr/hkust/ckpts/deep_speech",
-  "solver_gpu":[2],
+  "solver_gpu":[1],
   "solver_config":{
     "clip_norm":100.0,
     "log_interval":1
@@ -36,7 +36,7 @@
     "cmvn_file":"examples/asr/hkust/data/cmvn",
     "text_config": {
       "type":"vocab",
-      "model":"examples/asr/hkust/data/vocab"
+      "model":"examples/asr/hkust/data/hmmctc_vocab"
     },
     "input_length_range":[10, 8000]
   },
