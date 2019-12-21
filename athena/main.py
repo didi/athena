@@ -106,7 +106,7 @@ def build_model_from_jsonfile(jsonfile, rank=0, pre_run=True):
         )
         if p.dev_csv is None:
             raise ValueError("we currently need a dev_csv for pre-load")
-        dataset = dataset_builder.load_csv(p.dev_csv).as_dataset(p.batch_size)
+        dataset = dataset_builder.load_csv(p.dev_csv, speed_permutation=[1.0]).as_dataset(p.batch_size)
         solver.evaluate_step(model.prepare_samples(iter(dataset).next()))
     if rank == 0:
         set_default_summary_writer(p.summary_dir)
@@ -130,7 +130,7 @@ def train(jsonfile, Solver, rank_size=1, rank=0):
         model.restore_from_pretrained_model(pretrained_model, p2.model)
 
     # for cmvn
-    dataset_builder.load_csv(p.train_csv).compute_cmvn_if_necessary(rank == 0)
+    dataset_builder.load_csv(p.train_csv, speed_permutation=[1.0]).compute_cmvn_if_necessary(rank==0)
 
     # train
     solver = Solver(
@@ -150,7 +150,8 @@ def train(jsonfile, Solver, rank_size=1, rank=0):
 
         if rank == 0:
             logging.info(">>>>> start evaluate in epoch %d" % epoch)
-        dataset = dataset_builder.load_csv(p.dev_csv).as_dataset(p.batch_size, p.num_data_threads)
+        dataset = dataset_builder.load_csv(p.dev_csv, speed_permutation=[1.0]).as_dataset(p.batch_size,
+                                                                                          p.num_data_threads)
         loss = solver.evaluate(dataset, epoch)
         epoch = epoch + 1
         if rank == 0:

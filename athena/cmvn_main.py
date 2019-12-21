@@ -33,4 +33,4 @@ if __name__ == "__main__":
     p = parse_config(config)
     csv_file = sys.argv[2]
     dataset_builder = SUPPORTED_DATASET_BUILDER[p.dataset_builder](p.dataset_config)
-    dataset_builder.load_csv(csv_file).compute_cmvn_if_necessary(True)
+    dataset_builder.load_csv(csv_file, speed_permutation=[1.0]).compute_cmvn_if_necessary(True)

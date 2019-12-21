@@ -33,7 +33,7 @@ def decode(jsonfile):
     p, model, _, checkpointer, dataset_builder = build_model_from_jsonfile(jsonfile, 0)
     checkpointer.restore_from_best()
     solver = DecoderSolver(model, config=p.decode_config)
-    dataset_builder = dataset_builder.load_csv(p.test_csv).compute_cmvn_if_necessary(True)
+    dataset_builder = dataset_builder.load_csv(p.test_csv, speed_permutation=[1.0]).compute_cmvn_if_necessary(True)
     solver.decode(dataset_builder.as_dataset(batch_size=1))
 
 

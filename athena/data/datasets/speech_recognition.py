@@ -73,7 +73,7 @@ class SpeechRecognitionDatasetBuilder(BaseDatasetBuilder):
         if config is not None:
             self.hparams.override_from_dict(config)
 
-    def preprocess_data(self, file_path):
+    def preprocess_data(self, file_path, speed_permutation=None):
         """ Generate a list of tuples (wav_filename, wav_length_ms, transcript speaker)."""
         logging.info("Loading data from {}".format(file_path))
         with open(file_path, "r", encoding="utf-8") as file:
@@ -105,9 +105,12 @@ class SpeechRecognitionDatasetBuilder(BaseDatasetBuilder):
 
         entries = self.entries
         self.entries = []
-        if len(self.hparams.speed_permutation) > 1:
-            logging.info("perform speed permutation")
-        for speed in self.hparams.speed_permutation:
+        if speed_permutation is None:
+            speed_permutation = self.hparams.speed_permutation
+            if len(self.hparams.speed_permutation) > 1:
+                logging.info("perform speed permutation")
+
+        for speed in speed_permutation:
             for wav_filename, wav_len, transcripts, speaker in entries:
                 self.entries.append(
                     tuple([wav_filename,
@@ -122,9 +125,9 @@ class SpeechRecognitionDatasetBuilder(BaseDatasetBuilder):
         self.filter_sample_by_output_length()
         return self
 
-    def load_csv(self, file_path):
+    def load_csv(self, file_path, speed_permutation=None):
         """ load csv file """
-        return self.preprocess_data(file_path)
+        return self.preprocess_data(file_path, speed_permutation=speed_permutation)
 
     def __getitem__(self, index):
         audio_data, _, transcripts, speed, speaker = self.entries[index]

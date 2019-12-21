@@ -14,7 +14,7 @@
 
   "model":"mtl_transformer_ctc",
   "num_classes": null,
-  "pretrained_model": null,
+  "pretrained_model": "examples/asr/hkust/mpc.json",
   "model_config":{
     "model":"speech_transformer",
     "model_config":{
@@ -61,10 +61,11 @@
       "type":"vocab",
       "model":"examples/asr/hkust/data/vocab"
     },
+    "speed_permutation":[0.9, 1.0, 1.1],
     "input_length_range":[10, 8000]
   },
   "num_data_threads": 1,
   "train_csv":"examples/asr/hkust/data/train.csv",
   "dev_csv":"examples/asr/hkust/data/dev.csv",
-  "test_csv":"examples/asr/hkust/data/dev.csv"
+  "test_csv":"examples/asr/hkust/data/test.csv"
 }
