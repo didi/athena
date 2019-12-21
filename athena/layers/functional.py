@@ -18,6 +18,7 @@
 
 import numpy as np
 import tensorflow as tf
+from ..utils.misc import tensor_shape
 from tensorflow.python.framework import ops
 
 
@@ -42,10 +43,11 @@ def collapse4d(x, name=None):
     using tf.shape(x), which generate a tensor instead of x.shape
     """
     with ops.name_scope(name, "collapse4d") as name:
-        N = tf.shape(x)[0]
-        T = tf.shape(x)[1]
-        D = tf.shape(x)[2]
-        C = tf.shape(x)[3]
+        shape = tensor_shape(x)
+        N = shape[0]
+        T = shape[1]
+        D = shape[2]
+        C = shape[3]
         DC = D * C
         out = tf.reshape(x, [N, T, DC])
         return out
