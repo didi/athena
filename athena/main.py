@@ -108,8 +108,6 @@ def build_model_from_jsonfile(jsonfile, rank=0, pre_run=True):
             raise ValueError("we currently need a dev_csv for pre-load")
         dataset = dataset_builder.load_csv(p.dev_csv).as_dataset(p.batch_size)
         solver.evaluate_step(model.prepare_samples(iter(dataset).next()))
-    if rank == 0:
-        set_default_summary_writer(p.summary_dir)
     return p, model, optimizer, checkpointer, dataset_builder
 
 
@@ -128,6 +126,9 @@ def train(jsonfile, Solver, rank_size=1, rank=0):
         p2, pretrained_model, _, _, _ \
             = build_model_from_jsonfile(p.pretrained_model, rank)
         model.restore_from_pretrained_model(pretrained_model, p2.model)
+
+    if rank == 0:
+        set_default_summary_writer(p.summary_dir)
 
     # for cmvn
     dataset_builder.load_csv(p.train_csv).compute_cmvn_if_necessary(rank == 0)
