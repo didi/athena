@@ -37,11 +37,10 @@ def segment_trans(vocab_file, text_file):
         lines = text.readlines()
         sents = ''
         for line in lines:
-            sents += line
-        words = jieba.cut(sents, HMM=False)
-        seg_words = ' '.join(words)
-        seg_words = re.sub(r'\n ', r'\n', seg_words)
-        return seg_words
+            seg_line = jieba.cut(line.strip(), HMM=False)
+            seg_line = ' '.join(seg_line)
+            sents += seg_line + '\n'
+        return sents
 
 
 if __name__ == "__main__":
