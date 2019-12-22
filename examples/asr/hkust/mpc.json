@@ -1,7 +1,7 @@
 {
   "batch_size":64,
-  "num_epochs":100,
-  "sorta_epoch":1,
+  "num_epochs":60,
+  "sorta_epoch":2,
   "ckpt":"examples/asr/hkust/ckpts/mpc",
   "solver_gpu":[0],
   "solver_config":{
@@ -27,8 +27,8 @@
   "optimizer": "warmup_adam",
   "optimizer_config":{
     "d_model":512,
-    "warmup_steps":2000,
-    "k":0.3
+    "warmup_steps":5000,
+    "k":0.5
   },
 
   "dataset_builder":"speech_dataset",
