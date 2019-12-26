@@ -1,7 +1,7 @@
 {
   "batch_size":32,
-  "num_epochs":15,
-  "sorta_epoch":1,
+  "num_epochs":8,
+  "sorta_epoch":2,
   "ckpt":"examples/asr/aishell/ckpts/mtl_transformer_ctc/",
   "summary_dir":"examples/asr/aishell/ckpts/mtl_transformer_ctc/event",
 
@@ -45,7 +45,7 @@
     "d_model":512,
     "warmup_steps":3500,
     "k":0.7,
-    "decay_steps": 100000,
+    "decay_steps": 55050,
     "decay_rate": 0.1
   },
 
