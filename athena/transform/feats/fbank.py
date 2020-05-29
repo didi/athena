@@ -88,9 +88,11 @@ class Fbank(BaseFrontend):
         upper_frequency_limit = 0
         lower_frequency_limit = 60
         filterbank_channel_count = 40
-        hparams.add_hparam("upper_frequency_limit", upper_frequency_limit)
-        hparams.add_hparam("lower_frequency_limit", lower_frequency_limit)
-        hparams.add_hparam("filterbank_channel_count", filterbank_channel_count)
+        is_log10 = False
+        hparams.add_hparam('upper_frequency_limit', upper_frequency_limit)
+        hparams.add_hparam('lower_frequency_limit', lower_frequency_limit)
+        hparams.add_hparam('filterbank_channel_count', filterbank_channel_count)
+        hparams.add_hparam('is_log10', is_log10)
 
         # delta
         delta_delta = False  # True
@@ -133,7 +135,8 @@ class Fbank(BaseFrontend):
                                    sample_rate,
                                    upper_frequency_limit=p.upper_frequency_limit,
                                    lower_frequency_limit=p.lower_frequency_limit,
-                                   filterbank_channel_count=p.filterbank_channel_count)
+                                   filterbank_channel_count=p.filterbank_channel_count,
+                                   is_log10=p.is_log10)
 
             fbank = tf.squeeze(fbank, axis=0)
             shape = tf.shape(fbank)

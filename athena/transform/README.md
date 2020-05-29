@@ -65,7 +65,7 @@ spectrum_feats = spectrum(input_data, sample_rate)
 "window_type"         : "Type of window ('hamm'|'hann'|'povey'|'rect'|'blac'|'tria'). (string, default='povey')"
 "remove_dc_offset"    : "Subtract mean from waveform on each frame (bool, default = true)"
 "is_fbank"            : "If true, compute power spetrum without frame energy. If false, using the frame energy instead of the square of the constant component of the signal. (bool, default = false)"
-"output_type"         : "If 1, return power spectrum. If 2, return log-power spectrum. (int, default = 2)"
+"output_type"         : "If 1, return power spectrum. If 2, return log-power spectrum. If 3, return magnitude spectrum. (int, default = 2)"
 "dither"              : "Dithering constant (0.0 means no dither) (float, default = 1) [add robust to training]"
 ```
 

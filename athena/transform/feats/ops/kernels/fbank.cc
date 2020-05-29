@@ -26,11 +26,13 @@ const double kDefaultUpperFrequencyLimit = 4000;
 const double kDefaultLowerFrequencyLimit = 20;
 const double kFilterbankFloor = 1e-12;
 const int kDefaultFilterbankChannelCount = 40;
+const bool kDefaultIs_log10 = false;
 
 Fbank::Fbank()
     : initialized_(false),
       lower_frequency_limit_(kDefaultLowerFrequencyLimit),
       upper_frequency_limit_(kDefaultUpperFrequencyLimit),
+      is_log10_(kDefaultIs_log10),
       filterbank_channel_count_(kDefaultFilterbankChannelCount) {}
 
 Fbank::~Fbank() {}
@@ -63,6 +65,9 @@ void Fbank::Compute(const std::vector<double>& spectrogram_frame,
     if (val < kFilterbankFloor) {
       val = kFilterbankFloor;
     }
+    if (is_log10_)
+    (*output)[i] = log10(val);
+    else
     (*output)[i] = log(val);
   }
 }

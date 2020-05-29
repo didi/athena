@@ -57,6 +57,11 @@ class Fbank {
     filterbank_channel_count_ = filterbank_channel_count;
   }
 
+  void set_is_log10(bool is_log10) {
+    CHECK(!initialized_) << "Set log before calling Initialize.";
+    is_log10_ = is_log10;
+  }
+
  private:
   MfccMelFilterbank mel_filterbank_;
   int input_length_;
@@ -64,6 +69,7 @@ class Fbank {
   double lower_frequency_limit_;
   double upper_frequency_limit_;
   int filterbank_channel_count_;
+  bool is_log10_;
   TF_DISALLOW_COPY_AND_ASSIGN(Fbank);
 };  // class Fbank
 
