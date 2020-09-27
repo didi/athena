@@ -5,7 +5,7 @@
 
 Our vision is to empower both industrial application and academic research on end-to-end models for speech recognition. To make ASR accessible to everyone, we're also releasing some example implementation based on some opensource dataset, like HKSUT, Librispeech
 
-All of our models are implemented in Tensorflow>=2.0.0.
+All of our models are implemented in Tensorflow>=2.0.3.
 
 
 ## Table of Contents
