@@ -1,4 +1,4 @@
-tensorflow==2.0.3
+tensorflow==2.6.4
 sox
 absl-py
 yapf
